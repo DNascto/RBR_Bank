@@ -1,4 +1,4 @@
-package com.tcs.RBRBankSpring.model;
+package com.tcs.RBRBankSpring.models;
 
 import org.springframework.data.annotation.Id;
 
