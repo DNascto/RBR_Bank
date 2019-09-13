@@ -1,13 +1,19 @@
 package com.tcs.RBRBankSpring.models;
 
+import javax.persistence.*;
+
+@Entity
 public class Account {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private double balance;
     private double loanLimit;
     private String accountType;
     private String bankBranch;
     private int numberAccount;
-    private User user;
+//    @JoinColumn
+//    private User user;
 
     public Account() {
     }
@@ -18,7 +24,7 @@ public class Account {
         this.accountType = accountType;
         this.bankBranch = bankBranch;
         this.numberAccount = numberAccount;
-        this.user = user;
+//        this.user = user;
     }
 
     public Long getId() {
@@ -53,13 +59,13 @@ public class Account {
         this.accountType = accountType;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     public String getBankBranch() {
         return bankBranch;

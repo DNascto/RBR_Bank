@@ -22,6 +22,6 @@ public class RbrBankSpringApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		userRepository.save(new User("eu", "123456798", "123456789", new Date(), new Account()));
+		//userRepository.save(new User("eu", "123456798", "123456789", new Date(), new Account()));
 	}
 }

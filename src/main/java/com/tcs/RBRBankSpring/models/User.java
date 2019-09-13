@@ -1,7 +1,5 @@
 package com.tcs.RBRBankSpring.models;
 
-import org.springframework.data.annotation.Id;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -17,7 +15,8 @@ public class User {
     private String name;
     private String password;
     private Date birthDate;
-    private Account account;
+//    @JoinColumn
+//    private Account account;
 
     public User() {
     }
@@ -27,7 +26,7 @@ public class User {
         this.password = password;
         this.cpf = cpf;
         this.birthDate = birthDate;
-        this.account = account;
+//        this.account = account;
     }
 
     public Long getId() {
@@ -70,11 +69,11 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
+//    public Account getAccount() {
+//        return account;
+//    }
+//
+//    public void setAccount(Account account) {
+//        this.account = account;
+//    }
 }

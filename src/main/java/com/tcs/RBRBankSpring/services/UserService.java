@@ -37,10 +37,10 @@ public class UserService {
             return false;
         }
 
-        if(null == user.getAccount() || user.getAccount().getAccountType().isEmpty()
-                || user.getAccount().getLoanLimit() < 0){
-            return false;
-        }
+//        if(null == user.getAccount() || user.getAccount().getAccountType().isEmpty()
+//                || user.getAccount().getLoanLimit() < 0){
+//            return false;
+//        }
 
         if(name) {
             return true;
@@ -51,9 +51,9 @@ public class UserService {
     public User checkUserExistence(int numberAccount) {
         List<User> userList = userRepository.findAll();
         for (User u:userList) {
-            if(u.getAccount().getNumberAccount() == numberAccount){
-                return u;
-            }
+//            if(u.getAccount().getNumberAccount() == numberAccount){
+//                return u;
+//            }
         }
         return null;
     }
@@ -78,18 +78,18 @@ public class UserService {
         }
 
         /** check if the addressee exist*/
-        if(null == checkUserExistence(addressee.getAccount().getNumberAccount())){
-            return false;
-        }
+//        if(null == checkUserExistence(addressee.getAccount().getNumberAccount())){
+//            return false;
+//        }
 
         /** do the transfer if the client have money enough*/
-        if(user.getAccount().getBalance() >= value) {
-            addressee.getAccount().setBalance(addressee.getAccount().getBalance() + value);
-            user.getAccount().setBalance(user.getAccount().getBalance() - value);
-            userRepository.save(addressee);
-            userRepository.save(user);
-            return true;
-        }
+//        if(user.getAccount().getBalance() >= value) {
+//            addressee.getAccount().setBalance(addressee.getAccount().getBalance() + value);
+//            user.getAccount().setBalance(user.getAccount().getBalance() - value);
+//            userRepository.save(addressee);
+//            userRepository.save(user);
+//            return true;
+//        }
         return false;
     }
 }

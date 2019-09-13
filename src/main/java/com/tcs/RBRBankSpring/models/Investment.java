@@ -1,9 +1,14 @@
 package com.tcs.RBRBankSpring.models;
 
+import javax.persistence.*;
+
+@Entity
 public class Investment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String investmentType;
-    private User user;
+   // private User user;
 //    private Account userAccount;
     private double value;
 
@@ -12,7 +17,7 @@ public class Investment {
 
     public Investment(String investmentType, User user, double value) {
         this.investmentType = investmentType;
-        this.user = user;
+        //this.user = user;
         this.value = value;
     }
 
@@ -32,13 +37,13 @@ public class Investment {
         this.investmentType = investmentType;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     public double getValue() {
         return value;
