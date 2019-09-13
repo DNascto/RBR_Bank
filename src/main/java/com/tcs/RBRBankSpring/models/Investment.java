@@ -10,8 +10,7 @@ public class Investment {
     public Investment() {
     }
 
-    public Investment(Long id, String investmentType, User user, double value) {
-        this.id = id;
+    public Investment(String investmentType, User user, double value) {
         this.investmentType = investmentType;
         this.user = user;
         this.value = value;

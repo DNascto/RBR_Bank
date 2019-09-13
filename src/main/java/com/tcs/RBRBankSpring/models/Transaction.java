@@ -13,8 +13,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(Long id, Date date, String type, Long idClient, String description) {
-        this.id = id;
+    public Transaction(Date date, String type, Long idClient, String description) {
         this.date = date;
         this.type = type;
         this.idClient = idClient;

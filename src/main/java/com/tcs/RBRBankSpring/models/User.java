@@ -2,9 +2,7 @@ package com.tcs.RBRBankSpring.models;
 
 import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -12,17 +10,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
+    private String cpf;
+
     private String name;
     private String password;
-    private String cpf;
     private Date birthDate;
     private Account account;
 
     public User() {
     }
 
-    public User(Long id, String name, String password, String cpf, Date birthDate, Account account) {
-        this.id = id;
+    public User(String name, String password, String cpf, Date birthDate, Account account) {
         this.name = name;
         this.password = password;
         this.cpf = cpf;

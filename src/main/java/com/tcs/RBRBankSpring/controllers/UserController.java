@@ -2,6 +2,7 @@ package com.tcs.RBRBankSpring.controllers;
 
 import com.tcs.RBRBankSpring.models.User;
 import com.tcs.RBRBankSpring.repositories.UserRepository;
+import com.tcs.RBRBankSpring.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,28 +12,34 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping("/reg")
     public User createUser(@RequestBody User user){
-        //service.validateUser() == true ? return userRepository.save(user) : return null;
-        return userRepository.save(user);
+        if(userService.validateUser(user))
+            return userRepository.save(user);
+        else
+            return null;
     }
 
     @GetMapping("/cli")
-    public User getClient(@RequestParam Long id){
-        //service.checkUserExistence(id);
-        return userRepository.findById(id).get();
+    public User getClient(@RequestParam Integer numberAccount){
+        return userService.checkUserExistence(numberAccount);
+    }
+
+    @PostMapping("/login")
+    public User loginAccount(@RequestBody String login, @RequestBody String password){
+        return userService.validateLogin(login, password);
     }
 
     @PostMapping("/transfer")
-    public User doTransfer(@RequestBody User user, @RequestBody User addressee, @RequestBody Double value){
-        //service.validateTransfer(user);
-        return userRepository.save(user);
+    public boolean doTransfer(@RequestBody User user, @RequestBody User addressee, @RequestBody Double value){
+        return userService.validateTransfer(user, addressee, value);
     }
 
     @PostMapping("/loan")
     public User doLoan(@RequestBody User user, @RequestBody Double value){
-        //service.validateLoan(user);
+        userService.validateLoan(user);
         return userRepository.save(user);
     }
 }

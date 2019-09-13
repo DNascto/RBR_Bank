@@ -5,16 +5,19 @@ public class Account {
     private double balance;
     private double loanLimit;
     private String accountType;
+    private String bankBranch;
+    private int numberAccount;
     private User user;
 
     public Account() {
     }
 
-    public Account(Long id, double balance, double loanLimit, String accountType, User user) {
-        this.id = id;
+    public Account(double balance, double loanLimit, String accountType, String bankBranch, int numberAccount, User user) {
         this.balance = balance;
         this.loanLimit = loanLimit;
         this.accountType = accountType;
+        this.bankBranch = bankBranch;
+        this.numberAccount = numberAccount;
         this.user = user;
     }
 
@@ -56,5 +59,21 @@ public class Account {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getBankBranch() {
+        return bankBranch;
+    }
+
+    public void setBankBranch(String bankBranch) {
+        this.bankBranch = bankBranch;
+    }
+
+    public int getNumberAccount() {
+        return numberAccount;
+    }
+
+    public void setNumberAccount(int numberAccount) {
+        this.numberAccount = numberAccount;
     }
 }
