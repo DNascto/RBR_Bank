@@ -5,6 +5,7 @@ import com.tcs.RBRBankSpring.models.User;
 import com.tcs.RBRBankSpring.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -47,16 +48,12 @@ public class UserService {
         return false;
     }
 
+    @Transactional(readOnly = true)
     public User checkUserExistence(int numberAccount) {
-
-        List<User> userList = userRepository.findAll();
-        for (User u:userList) {
-            System.out.println("passei no loop: " + u.getName() + " conta: " + u.getAccount().getNumberAccount());
-            if(u.getAccount().getNumberAccount() == numberAccount){
-                return u;
-            }
-        }
-        return null;
+        /** ACREDITE... isso funciona
+         * int c = 768_890;
+        System.out.println("Seus incredulos: "+c);*/
+        return userRepository.findByAccount(numberAccount);
     }
 
     public User validateLogin(String login, String password) {

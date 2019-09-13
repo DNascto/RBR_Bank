@@ -1,8 +1,11 @@
 package com.tcs.RBRBankSpring.controllers;
 
+import com.tcs.RBRBankSpring.models.Account;
 import com.tcs.RBRBankSpring.repositories.AccountRepository;
+import com.tcs.RBRBankSpring.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,4 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AccountService accountService;
+
+
+    public Account createAccount() {
+        Account account = null;/**TODO completar o metodo*///accountService.createAccount(); ///
+        return accountRepository.save(account);
+    }
 }

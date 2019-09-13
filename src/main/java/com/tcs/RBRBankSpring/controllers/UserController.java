@@ -1,9 +1,11 @@
 package com.tcs.RBRBankSpring.controllers;
 
+import com.tcs.RBRBankSpring.models.Account;
 import com.tcs.RBRBankSpring.models.User;
 import com.tcs.RBRBankSpring.repositories.UserRepository;
 import com.tcs.RBRBankSpring.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Transient;
@@ -16,20 +18,21 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private UserService userService;// = new UserService();
+    private UserService userService;
 
     @PostMapping("/reg")
     public User createUser(@RequestBody User user){
-        if(userService.validateUser(user))
+        if(userService.validateUser(user)) {
+            Account account = new AccountController().createAccount();
+            user.setAccount(account);
             return userRepository.save(user);
-        else
+        }else
             return null;
     }
 
     @GetMapping("/cli")
-    public User getClient(@RequestParam Integer numberAccount){
-        System.out.println("entrei no getClient");
-        return userService.checkUserExistence(numberAccount);
+    public ResponseEntity<User> getClient(@RequestParam Integer numberAccount){
+        return ResponseEntity.ok(userService.checkUserExistence(numberAccount));
     }
 
     @PostMapping("/login")
