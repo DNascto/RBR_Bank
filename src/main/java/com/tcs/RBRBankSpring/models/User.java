@@ -11,12 +11,13 @@ public class User {
 
     @Column(unique = true)
     private String cpf;
-
     private String name;
     private String password;
     private Date birthDate;
-//    @JoinColumn
-//    private Account account;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="account", referencedColumnName="id")
+    private Account account;
 
     public User() {
     }
@@ -26,7 +27,7 @@ public class User {
         this.password = password;
         this.cpf = cpf;
         this.birthDate = birthDate;
-//        this.account = account;
+        this.account = account;
     }
 
     public Long getId() {
@@ -69,11 +70,11 @@ public class User {
         this.birthDate = birthDate;
     }
 
-//    public Account getAccount() {
-//        return account;
-//    }
-//
-//    public void setAccount(Account account) {
-//        this.account = account;
-//    }
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 }

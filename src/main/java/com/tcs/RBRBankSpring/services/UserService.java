@@ -1,18 +1,17 @@
 package com.tcs.RBRBankSpring.services;
 
 import com.tcs.RBRBankSpring.models.User;
+
 import com.tcs.RBRBankSpring.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
+@Component
 public class UserService {
-
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     public boolean validateUser(User user) {
         boolean name = false;
@@ -37,10 +36,10 @@ public class UserService {
             return false;
         }
 
-//        if(null == user.getAccount() || user.getAccount().getAccountType().isEmpty()
-//                || user.getAccount().getLoanLimit() < 0){
-//            return false;
-//        }
+        if(null == user.getAccount() || user.getAccount().getAccountType().isEmpty()
+                || user.getAccount().getLoanLimit() < 0){
+            return false;
+        }
 
         if(name) {
             return true;
@@ -49,11 +48,13 @@ public class UserService {
     }
 
     public User checkUserExistence(int numberAccount) {
+
         List<User> userList = userRepository.findAll();
         for (User u:userList) {
-//            if(u.getAccount().getNumberAccount() == numberAccount){
-//                return u;
-//            }
+            System.out.println("passei no loop: " + u.getName() + " conta: " + u.getAccount().getNumberAccount());
+            if(u.getAccount().getNumberAccount() == numberAccount){
+                return u;
+            }
         }
         return null;
     }
@@ -78,18 +79,18 @@ public class UserService {
         }
 
         /** check if the addressee exist*/
-//        if(null == checkUserExistence(addressee.getAccount().getNumberAccount())){
-//            return false;
-//        }
+        if(null == checkUserExistence(addressee.getAccount().getNumberAccount())){
+            return false;
+        }
 
         /** do the transfer if the client have money enough*/
-//        if(user.getAccount().getBalance() >= value) {
-//            addressee.getAccount().setBalance(addressee.getAccount().getBalance() + value);
-//            user.getAccount().setBalance(user.getAccount().getBalance() - value);
-//            userRepository.save(addressee);
-//            userRepository.save(user);
-//            return true;
-//        }
+        if(user.getAccount().getBalance() >= value) {
+            addressee.getAccount().setBalance(addressee.getAccount().getBalance() + value);
+            user.getAccount().setBalance(user.getAccount().getBalance() - value);
+            userRepository.save(addressee);
+            userRepository.save(user);
+            return true;
+        }
         return false;
     }
 }

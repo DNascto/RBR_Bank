@@ -8,7 +8,10 @@ public class Investment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String investmentType;
-   // private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user", referencedColumnName="id")
+    private User user;
 //    private Account userAccount;
     private double value;
 
@@ -17,7 +20,7 @@ public class Investment {
 
     public Investment(String investmentType, User user, double value) {
         this.investmentType = investmentType;
-        //this.user = user;
+        this.user = user;
         this.value = value;
     }
 
@@ -37,13 +40,13 @@ public class Investment {
         this.investmentType = investmentType;
     }
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public double getValue() {
         return value;

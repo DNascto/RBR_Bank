@@ -10,21 +10,18 @@ public class Account {
     private double balance;
     private double loanLimit;
     private String accountType;
-    private String bankBranch;
+    private int bankBranch;
     private int numberAccount;
-//    @JoinColumn
-//    private User user;
 
     public Account() {
     }
 
-    public Account(double balance, double loanLimit, String accountType, String bankBranch, int numberAccount, User user) {
+    public Account(double balance, double loanLimit, String accountType, int bankBranch, int numberAccount) {
         this.balance = balance;
         this.loanLimit = loanLimit;
         this.accountType = accountType;
         this.bankBranch = bankBranch;
         this.numberAccount = numberAccount;
-//        this.user = user;
     }
 
     public Long getId() {
@@ -59,19 +56,11 @@ public class Account {
         this.accountType = accountType;
     }
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-
-    public String getBankBranch() {
+    public int getBankBranch() {
         return bankBranch;
     }
 
-    public void setBankBranch(String bankBranch) {
+    public void setBankBranch(int bankBranch) {
         this.bankBranch = bankBranch;
     }
 

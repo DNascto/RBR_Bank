@@ -6,13 +6,17 @@ import com.tcs.RBRBankSpring.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Transient;
+
 @RestController
 @RequestMapping("/rbr/user")
 @CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
-    private UserService userService;
+
+    @Autowired
+    private UserService userService;// = new UserService();
 
     @PostMapping("/reg")
     public User createUser(@RequestBody User user){
@@ -24,6 +28,7 @@ public class UserController {
 
     @GetMapping("/cli")
     public User getClient(@RequestParam Integer numberAccount){
+        System.out.println("entrei no getClient");
         return userService.checkUserExistence(numberAccount);
     }
 
