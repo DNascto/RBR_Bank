@@ -1,5 +1,7 @@
 package com.tcs.RBRBankSpring.services;
 
+import com.tcs.RBRBankSpring.controllers.AccountController;
+import com.tcs.RBRBankSpring.models.Account;
 import com.tcs.RBRBankSpring.models.User;
 
 import com.tcs.RBRBankSpring.repositories.UserRepository;
@@ -13,6 +15,15 @@ import java.util.List;
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+    public User createClient(User user){
+        if(validateUser(user)) {
+            Account account = new AccountController().createAccount(user.getAccount().getAccountType());
+            user.setAccount(account);
+            return userRepository.save(user);
+        }else
+            return null;
+    }
 
     public boolean validateUser(User user) {
         boolean name = false;
@@ -52,10 +63,11 @@ public class UserService {
     public User checkUserExistence(int numberAccount) {
         /** ACREDITE... isso funciona
          * int c = 768_890;
-        System.out.println("Seus incredulos: "+c);*/
+         * System.out.println("Seus incredulos: "+c);*/
         return userRepository.findByAccount(numberAccount);
     }
 
+    @Transactional(readOnly = true)
     public User validateLogin(String login, String password) {
         List<User> userList = userRepository.findAll();
         for (User u:userList) {
@@ -66,10 +78,25 @@ public class UserService {
         return null;
     }
 
-    public void validateLoan(User user) {
-
+    public User createLoan(User user) {
+        return null;
     }
 
+    @Transactional(readOnly = true)
+    private void validateLoan(User user) {
+    }
+
+    public boolean createTransfer(User user, User addressee, Double value) {
+        if(validateTransfer(user, addressee, value)){
+            addressee.getAccount().setBalance(addressee.getAccount().getBalance() + value);
+            user.getAccount().setBalance(user.getAccount().getBalance() - value);
+            userRepository.save(addressee);
+            userRepository.save(user);
+        }
+        return false;
+    }
+
+    @Transactional(readOnly = true)
     public boolean validateTransfer(User user, User addressee, Double value) {
         if(null == value || value <= 0 || value.isNaN()) {
             return false;
@@ -82,10 +109,6 @@ public class UserService {
 
         /** do the transfer if the client have money enough*/
         if(user.getAccount().getBalance() >= value) {
-            addressee.getAccount().setBalance(addressee.getAccount().getBalance() + value);
-            user.getAccount().setBalance(user.getAccount().getBalance() - value);
-            userRepository.save(addressee);
-            userRepository.save(user);
             return true;
         }
         return false;

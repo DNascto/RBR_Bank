@@ -13,15 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rbr/account")
 @CrossOrigin(origins = "http://localhost:4200")
 public class AccountController {
-    @Autowired
-    private AccountRepository accountRepository;
 
     @Autowired
     private AccountService accountService;
 
-
-    public Account createAccount() {
-        Account account = null;/**TODO completar o metodo*///accountService.createAccount(); ///
-        return accountRepository.save(account);
+    public Account createAccount(String tipo) {
+        return accountService.createAccount(tipo);
     }
 }

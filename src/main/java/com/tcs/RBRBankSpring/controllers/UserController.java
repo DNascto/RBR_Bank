@@ -14,20 +14,14 @@ import javax.persistence.Transient;
 @RequestMapping("/rbr/user")
 @CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
 
     @PostMapping("/reg")
     public User createUser(@RequestBody User user){
-        if(userService.validateUser(user)) {
-            Account account = new AccountController().createAccount();
-            user.setAccount(account);
-            return userRepository.save(user);
-        }else
-            return null;
+        System.out.println("entrei: " + user.toString());
+        return userService.createClient(user);
     }
 
     @GetMapping("/cli")
@@ -42,12 +36,11 @@ public class UserController {
 
     @PostMapping("/transfer")
     public boolean doTransfer(@RequestBody User user, @RequestBody User addressee, @RequestBody Double value){
-        return userService.validateTransfer(user, addressee, value);
+        return userService.createTransfer(user, addressee, value);
     }
 
     @PostMapping("/loan")
     public User doLoan(@RequestBody User user, @RequestBody Double value){
-        userService.validateLoan(user);
-        return userRepository.save(user);
+        return userService.createLoan(user);
     }
 }
