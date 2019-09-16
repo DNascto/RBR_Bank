@@ -17,7 +17,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    public Account createAccount(Account conta) {
-        return accountService.createAccount(conta);
+    public Account createAccount(String tipo) {
+        return accountService.createAccount(tipo);
     }
 }
