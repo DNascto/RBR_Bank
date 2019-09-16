@@ -15,7 +15,7 @@ public class User {
     private String password;
     private Date birthDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="account", referencedColumnName="id")
     private Account account;
 
