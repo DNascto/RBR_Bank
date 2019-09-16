@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-public class UserService {
+public class UserService  {
     @Autowired
     UserRepository userRepository;
 
