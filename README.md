@@ -22,7 +22,7 @@ Functional Requirements
 - access account
 - view balance
 - create investment
-- money transfer
+- money transferRequest
 - realize loan
 
 

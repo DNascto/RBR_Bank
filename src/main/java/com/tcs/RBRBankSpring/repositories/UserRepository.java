@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-//    @Query("SELECT u FROM User u LEFT JOIN FETCH u.account WHERE u.account.numberAccount = :acc")
-//    User findByAccount(@Param("acc") int numberAccount);
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.account WHERE u.account.numberAccount = :acc")
+    User findByAccount(@Param("acc") int numberAccount);
 }

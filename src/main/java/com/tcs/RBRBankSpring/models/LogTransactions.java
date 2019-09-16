@@ -7,28 +7,27 @@ import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
-public class Transaction {
+public class LogTransactions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date date;
-    private String type;
+    private TransactionType type;
     private Long idClient;
     private Long idAddressee;
     private String description;
 
-    public Transaction() {
+    public LogTransactions() {
     }
 
-    public Transaction(Date date, String type, Long idClient, String description) {
+    public LogTransactions(Date date, TransactionType type, Long idClient, String description) {
         this.date = date;
         this.type = type;
         this.idClient = idClient;
         this.description = description;
     }
 
-    public Transaction(Long id, Date date, String type, Long idClient, Long idAddressee, String description) {
-        this.id = id;
+    public LogTransactions(Date date, TransactionType type, Long idClient, Long idAddressee, String description) {
         this.date = date;
         this.type = type;
         this.idClient = idClient;
@@ -52,11 +51,11 @@ public class Transaction {
         this.date = date;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 

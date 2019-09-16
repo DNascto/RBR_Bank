@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 @Service
@@ -15,18 +14,23 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public Account createAccount(String type) {
+    public Account createAccount(Account acc) {
         Account account = new Account();
         account.setBalance(0);
-        account.setAccountType(type);
+        account.setAccountType(acc.getAccountType());
         account.setBankBranch(174);
-        account.setLoanLimit(500);
+
+        if(acc.getLoanLimit() > 0){
+            account.setLoanLimit(acc.getLoanLimit());
+        }else
+            account.setLoanLimit(500);
+
         account.setNumberAccount(generateAccountNumber());
         return accountRepository.save(account);
     }
 
     private int generateAccountNumber(){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         String vet = formatter.format(date).substring(0, 6) + formatter.format(date).substring(8, 10);
         String vet2 = formatter.format(date).substring(11);
