@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class UserService {
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
     private AccountController accountController;
@@ -114,7 +114,8 @@ public class UserService {
         /** ACREDITE... isso funciona
          * int c = 768_890;
          * System.out.println("Seu cetico: " + c);*/
-        return userRepository.findByAccount(numberAccount);
+//        return userRepository.findByAccount(numberAccount);
+        return null;
     }
 
     public List<User> getAllUsers() {

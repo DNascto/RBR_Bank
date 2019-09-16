@@ -9,7 +9,7 @@ public class Investment {
     private Long id;
     private String investmentType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user", referencedColumnName="id")
     private User user;
 //    private Account userAccount;
