@@ -1,14 +1,12 @@
 package com.tcs.RBRBankSpring.controllers;
 
-import com.tcs.RBRBankSpring.models.Account;
 import com.tcs.RBRBankSpring.models.User;
-import com.tcs.RBRBankSpring.repositories.UserRepository;
 import com.tcs.RBRBankSpring.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Transient;
+import java.util.List;
 
 @RestController
 @RequestMapping("/rbr/user")
@@ -20,8 +18,12 @@ public class UserController {
 
     @PostMapping("/reg")
     public User createUser(@RequestBody User user){
-        System.out.println("entrei: " + user.toString());
         return userService.createClient(user);
+    }
+
+    @GetMapping("/cli/all")
+    public List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 
     @GetMapping("/cli")

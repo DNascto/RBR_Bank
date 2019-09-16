@@ -14,27 +14,32 @@ import java.util.List;
 @Component
 public class UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private AccountController accountController;
 
     public User createClient(User user){
         if(validateUser(user)) {
-            Account account = new AccountController().createAccount(user.getAccount().getAccountType());
+//            Account account = new AccountController().createAccount(user.getAccount().getAccountType());
+//            AccountController accountController = new AccountController();
+            Account account = accountController.createAccount(user.getAccount().getAccountType());
             user.setAccount(account);
             return userRepository.save(user);
         }else
             return null;
     }
 
-    public boolean validateUser(User user) {
+    private boolean validateUser(User user) {
         boolean name = false;
-        if(null == user.getName() || user.getName().isEmpty() || user.getName().matches("[0..9]")
+        if(null == user.getName() || user.getName().isEmpty() || user.getName().matches("[0-9]*")
             || user.getName().length() < 6){
             return false;
-        }else if(user.getName().matches("[a..zA..Z]")){
+        }else if(user.getName().matches("[a-zA-Z\\s]*")){
             name = true;
         }
 
-        if(null == user.getCpf() || user.getCpf().isEmpty() || user.getCpf().matches("[a..zA..Z]")){
+        if(null == user.getCpf() || user.getCpf().isEmpty() || user.getCpf().matches("[a-zA-Z ]*")){
             return false;
         }
 
@@ -44,7 +49,7 @@ public class UserService {
         }
 
         if(null == user.getBirthDate() || user.getBirthDate().toString().isEmpty()
-                || user.getBirthDate().toString().matches("[a..zA..Z]")){
+                || user.getBirthDate().toString().matches("[a-zA-Z ]*")){
             return false;
         }
 
@@ -53,18 +58,7 @@ public class UserService {
             return false;
         }
 
-        if(name) {
-            return true;
-        }
-        return false;
-    }
-
-    @Transactional(readOnly = true)
-    public User checkUserExistence(int numberAccount) {
-        /** ACREDITE... isso funciona
-         * int c = 768_890;
-         * System.out.println("Seus incredulos: "+c);*/
-        return userRepository.findByAccount(numberAccount);
+        return name;
     }
 
     @Transactional(readOnly = true)
@@ -97,7 +91,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public boolean validateTransfer(User user, User addressee, Double value) {
+    private boolean validateTransfer(User user, User addressee, Double value) {
+        /** check if value is valide*/
         if(null == value || value <= 0 || value.isNaN()) {
             return false;
         }
@@ -107,10 +102,22 @@ public class UserService {
             return false;
         }
 
-        /** do the transfer if the client have money enough*/
+        /** do the transfer if the client have money enough */
         if(user.getAccount().getBalance() >= value) {
             return true;
         }
         return false;
+    }
+
+    @Transactional(readOnly = true)
+    public User checkUserExistence(int numberAccount) {
+        /** ACREDITE... isso funciona
+         * int c = 768_890;
+         * System.out.println("Seu cetico: " + c);*/
+        return userRepository.findByAccount(numberAccount);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
