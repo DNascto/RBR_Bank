@@ -1,6 +1,7 @@
 package com.tcs.RBRBankSpring.models;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 public class Investment {
@@ -9,19 +10,24 @@ public class Investment {
     private Long id;
     private String investmentType;
 
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name="user", referencedColumnName="id")
+//    private User user;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="user", referencedColumnName="id")
-    private User user;
-//    private Account userAccount;
+    private Account userAccount;
     private double value;
+    private float profitabilityRate;
+    private LocalDate expiry;
 
     public Investment() {
     }
 
-    public Investment(String investmentType, User user, double value) {
+    public Investment(String investmentType, Account userAccount, double value, float profitabilityRate, LocalDate expiry) {
         this.investmentType = investmentType;
-        this.user = user;
+        this.userAccount = userAccount;
         this.value = value;
+        this.profitabilityRate = profitabilityRate;
+        this.expiry = expiry;
     }
 
     public Long getId() {
@@ -40,12 +46,12 @@ public class Investment {
         this.investmentType = investmentType;
     }
 
-    public User getUser() {
-        return user;
+    public Account getUserAccount() {
+        return userAccount;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserAccount(Account userAccount) {
+        this.userAccount = userAccount;
     }
 
     public double getValue() {
@@ -54,5 +60,21 @@ public class Investment {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public float getProfitabilityRate() {
+        return profitabilityRate;
+    }
+
+    public void setProfitabilityRate(float profitabilityRate) {
+        this.profitabilityRate = profitabilityRate;
+    }
+
+    public LocalDate getExpiry() {
+        return expiry;
+    }
+
+    public void setExpiry(LocalDate expiry) {
+        this.expiry = expiry;
     }
 }

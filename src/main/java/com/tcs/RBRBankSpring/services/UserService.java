@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private AccountController accountController;
@@ -29,8 +29,8 @@ public class UserService {
             Account account = accountController.createAccount(user.getAccount());
             user.setAccount(account);
             User newUser = userRepository.save(user);
-            logTransactionsController.newLog(TransactionType.NEWACCOUNT, newUser.getId(), "Criação do usuario "
-                    + newUser.getId() + " com a conta: " + newUser.getAccount().getNumberAccount()+".");
+            logTransactionsController.newLog(TransactionType.NEWACCOUNT, newUser.getId(),
+                    "Criação do usuario com a conta: " + newUser.getAccount().getNumberAccount()+".");
             return newUser;
         }else
             return null;
@@ -77,8 +77,8 @@ public class UserService {
         List<User> userList = userRepository.findAll();
         for (User u:userList) {
             if(u.getCpf().equals(login) && u.getPassword().equals(password)){
-                logTransactionsController.newLog(TransactionType.LOAN, u.getId(),
-                        "Login realizado com sucesso pelo id: " + u.getId());
+                logTransactionsController.newLog(TransactionType.LOGIN, u.getId(),
+                        "Login realizado com sucesso pela conta: " + u.getAccount().getNumberAccount());
                 return u;
             }
         }
@@ -86,32 +86,33 @@ public class UserService {
         return null;
     }
 
-    public User createLoan(User user, Double value) {
-        if(validateLoan(user, value)) {
-            user.getAccount().setLoanLimit(user.getAccount().getLoanLimit() - value);
-            User currentUser = userRepository.save(user);
-            logTransactionsController.newLog(TransactionType.LOAN, currentUser.getId(), "Emprestimo feito pelo usuario (id) "
-                    + currentUser.getId() + " com a conta \"" + currentUser.getAccount().getNumberAccount()+"\" no valor de ("+value+").");
-            return currentUser;
-        }else
-            return null;
-    }
+//    public boolean createLoan(Account account, Double value) {
+//        if(validateLoan(account, value)) {
+//            account.setLoanLimit(account.getLoanLimit() - value);
+//            User currentUser = userRepository.save(user);
+//            logTransactionsController.newLog(TransactionType.LOAN, currentUser.getId(), "Emprestimo feito pelo usuario (id) "
+//                    + currentUser.getId() + " com a conta \"" + currentUser.getAccount().getNumberAccount()+"\" no valor de ("+value+").");
+//            return true;
+//        }else
+//            return false;
+//    }
+//
+//    @Transactional(readOnly = true)
+//    private boolean validateLoan(Account account, Double value) {
+//        /* check if value is valide*/
+//        if(null == value || value <= 0 || value.isNaN()) {
+//            System.out.println("VALOR para EMPRESTIMO invalido");
+//            return false;
+//        }
+//
+//        if(account.getLoanLimit() < value) {
+//            System.out.println("VALOR ultrapassa o limite de EMPRESTIMO");
+//            return false;
+//        }
+//
+//        return true;
+//    }
 
-    @Transactional(readOnly = true)
-    private boolean validateLoan(User user, Double value) {
-        /* check if value is valide*/
-        if(null == value || value <= 0 || value.isNaN()) {
-            System.out.println("VALOR para EMPRESTIMO invalido");
-            return false;
-        }
-
-        if(user.getAccount().getLoanLimit() < value) {
-            System.out.println("VALOR ultrapassa o limite de EMPRESTIMO");
-            return false;
-        }
-
-        return true;
-    }
     @Transactional
     public boolean createTransfer(User sender, User receiver, Double value) {
         if(validateTransfer(sender, receiver, value)){
@@ -127,6 +128,9 @@ public class UserService {
         userRepository.saveAndFlush(receiver);
         sender.getAccount().setBalance(sender.getAccount().getBalance() - value);
         userRepository.saveAndFlush(sender);
+        logTransactionsController.newLog(TransactionType.TRANSFER, sender.getId(), receiver.getId(),
+                "TRANSFERENCIA realizada por "+sender.getAccount().getNumberAccount()
+                        +" para "+receiver.getAccount().getNumberAccount());
     }
 
     @Transactional(readOnly = true)
