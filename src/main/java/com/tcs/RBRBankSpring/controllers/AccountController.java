@@ -3,6 +3,7 @@ package com.tcs.RBRBankSpring.controllers;
 import com.tcs.RBRBankSpring.models.Account;
 import com.tcs.RBRBankSpring.request.DepositRequest;
 import com.tcs.RBRBankSpring.request.LoanRequest;
+import com.tcs.RBRBankSpring.request.TransferRequest;
 import com.tcs.RBRBankSpring.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,13 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:4200")
 public class AccountController {
 
-    @Autowired
     private AccountService accountService;
 
-    public Account createAccount(Account conta) {
-        return accountService.createAccount(conta);
+    @Autowired
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
-
 
     @PostMapping("/loan")
     public ResponseEntity doLoan(@RequestBody LoanRequest loanRequest) {
@@ -28,9 +28,9 @@ public class AccountController {
 
         if (account != null) {
             if(accountService.createLoan(account, loanRequest.getValue()))
-                ResponseEntity.ok().build();
+                return ResponseEntity.ok().build();
             else
-                ResponseEntity.status(HttpStatus.CONFLICT);
+                return ResponseEntity.unprocessableEntity().build();
         }
         return ResponseEntity.notFound().build();
     }
@@ -44,6 +44,25 @@ public class AccountController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity doTransfer(@RequestBody TransferRequest transferRequest) {
+        Account sender = accountService.findByAccount(transferRequest.getSenderId());
+        Account receiver = accountService.findByAccount(transferRequest.getReceiverId());
+
+        if (sender != null && receiver != null) {
+            if(accountService.createTransfer(sender, receiver, transferRequest.getValue()))
+                return ResponseEntity.ok().build();
+            else
+                ResponseEntity.status(HttpStatus.CONFLICT);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    public Account createAccount(Account account) {
+        return accountService.createAccount(account);
     }
 
     public Account findByAccount(int accountNumber) {

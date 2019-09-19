@@ -13,10 +13,14 @@ import java.time.Instant;
 @Service
 public class AccountService {
 
-    @Autowired
     private AccountRepository accountRepository;
-    @Autowired
     private LogTransactionsController logTransactionsController;
+
+    @Autowired
+    public AccountService(AccountRepository accountRepository, LogTransactionsController logTransactionsController) {
+        this.accountRepository = accountRepository;
+        this.logTransactionsController = logTransactionsController;
+    }
 
     public Account createAccount(Account acc) {
         Account account = new Account();
@@ -70,13 +74,53 @@ public class AccountService {
 
         return true;
     }
+    @Transactional
+    public boolean createTransfer(Account sender, Account receiver, Double value) {
+        if(validateTransfer(sender, receiver, value)){
+            makeTransfer(sender, receiver, value);
+            return true;
+        }
+        System.out.println("DESTINATARIO nao encontrado");
+        return false;
+    }
 
-    public Account findByAccount(int accountNumber) {
-        return accountRepository.findByAccount(accountNumber);
+    private void makeTransfer(Account sender, Account receiver, Double value) {
+        receiver.setBalance(receiver.getBalance() + value);
+        accountRepository.saveAndFlush(receiver);
+        sender.setBalance(sender.getBalance() - value);
+        accountRepository.saveAndFlush(sender);
+        logTransactionsController.newLog(TransactionType.TRANSFER, sender.getId(), receiver.getId(),
+                "TRANSFERENCIA realizada por "+sender.getNumberAccount()
+                        +" para "+receiver.getNumberAccount());
+    }
+
+    @Transactional(readOnly = true)
+    private boolean validateTransfer(Account user, Account addressee, Double value) {
+        /* check if value is valide*/
+        if(null == value || value <= 0 || value.isNaN()) {
+            System.out.println("VALOR para TRANSFERENCIA invalido");
+            return false;
+        }
+
+        /* check if the addressee exist*/
+        if(null == findByAccount(addressee.getNumberAccount())){
+            System.out.println("DESTINATARIO para TRANSFERENCIA nao encontrado");
+            return false;
+        }
+
+        /* do the transfer if the client have money enough */
+        if(user.getBalance() >= value) {
+            return true;
+        }
+        return false;
     }
 
     public void doDeposit(Account account, double value) {
         account.setBalance(account.getBalance() + value);
         accountRepository.save(account);
+    }
+
+    public Account findByAccount(int accountNumber) {
+        return accountRepository.findByAccount(accountNumber);
     }
 }
