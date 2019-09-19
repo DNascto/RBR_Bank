@@ -1,7 +1,7 @@
 package com.tcs.RBRBankSpring.controllers;
 
 import com.tcs.RBRBankSpring.models.Account;
-import com.tcs.RBRBankSpring.repositories.AccountRepository;
+import com.tcs.RBRBankSpring.request.DepositRequest;
 import com.tcs.RBRBankSpring.request.LoanRequest;
 import com.tcs.RBRBankSpring.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +31,17 @@ public class AccountController {
                 ResponseEntity.ok().build();
             else
                 ResponseEntity.status(HttpStatus.CONFLICT);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/deposit")
+    public ResponseEntity doDeposit(@RequestBody DepositRequest deposit){
+        Account account = accountService.findByAccount(deposit.getAccountNumber());
+
+        if(account != null){
+            accountService.doDeposit(account, deposit.getValue());
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
