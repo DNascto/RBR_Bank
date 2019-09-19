@@ -74,4 +74,9 @@ public class AccountService {
     public Account findByAccount(int accountNumber) {
         return accountRepository.findByAccount(accountNumber);
     }
+
+    public void doDeposit(Account account, double value) {
+        account.setBalance(account.getBalance() + value);
+        accountRepository.save(account);
+    }
 }

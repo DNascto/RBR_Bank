@@ -37,39 +37,38 @@ public class UserService {
     }
 
     private boolean validateUser(User user) {
-        boolean name = false;
-        if(null == user.getName() || user.getName().isEmpty() || user.getName().matches("[0-9]*")
-            || user.getName().length() < 6){
-            System.out.println("NOME incorreto");
-            return false;
-        }else if(user.getName().matches("[a-zA-Z\\s]*")){
-            name = true;
-        }
-
-        if(null == user.getCpf() || user.getCpf().isEmpty() || user.getCpf().matches("[a-zA-Z ]*")){
+        if(user.getCpf() == null || user.getCpf().isEmpty() || /*user.getCpf().matches("[a-zA-Z\\s]*")*/
+            !user.getCpf().matches("[0-9]*") || user.getCpf().length() != 11){
             System.out.println("CPF invalido");
             return false;
         }
 
-        if(null == user.getPassword() || user.getPassword().isEmpty()
+        if(user.getPassword() == null || user.getPassword().isEmpty() || user.getPassword().equals(user.getCpf())
                 || user.getPassword().length() < 6 || user.getPassword().length() > 20){
             System.out.println("SENHA invalida");
             return false;
         }
 
-        if(null == user.getBirthDate() || user.getBirthDate().toString().isEmpty()
+        if(user.getBirthDate() == null || user.getBirthDate().toString().isEmpty()
                 || user.getBirthDate().toString().matches("[a-zA-Z ]*")){
             System.out.println("DATA DE NASCIMENTO invalida");
             return false;
         }
 
-        if(null == user.getAccount() || user.getAccount().getAccountType().isEmpty()
-                || user.getAccount().getLoanLimit() < 0){
+        if(user.getAccount() == null || user.getAccount().getAccountType() == null
+                || user.getAccount().getAccountType().isEmpty() || user.getAccount().getLoanLimit() < 0){
             System.out.println("CONTA invalida");
             return false;
         }
 
-        return name;
+        if(user.getName() == null || user.getName().isEmpty() || user.getName().matches("[0-9]*")
+                || user.getName().length() < 6){
+            System.out.println("NOME incorreto");
+            return false;
+        }else if(user.getName().matches("[a-zA-Z\\s]*")){
+            return true;
+        }
+        return false;
     }
 
     @Transactional(readOnly = true)
