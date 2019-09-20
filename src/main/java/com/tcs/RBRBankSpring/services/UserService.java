@@ -15,22 +15,25 @@ import java.util.List;
 
 @Component
 public class UserService {
-    @Autowired
+
     private UserRepository userRepository;
-
-    @Autowired
     private AccountController accountController;
+    private LogTransactionsController logTransactionsController;
 
     @Autowired
-    private LogTransactionsController logTransactionsController;
+    public UserService(UserRepository userRepository, AccountController accountController, LogTransactionsController logTransactionsController) {
+        this.userRepository = userRepository;
+        this.accountController = accountController;
+        this.logTransactionsController = logTransactionsController;
+    }
 
     public User createClient(User user){
         if(validateUser(user)) {
             Account account = accountController.createAccount(user.getAccount());
             user.setAccount(account);
             User newUser = userRepository.save(user);
-            logTransactionsController.newLog(TransactionType.NEWACCOUNT, newUser.getId(),
-                    "Criação do usuario com a conta: " + newUser.getAccount().getNumberAccount()+".");
+//            logTransactionsController.newLog(TransactionType.NEWACCOUNT, newUser.getId(),
+//                    "Criação do usuario com a conta: " + newUser.getAccount().getNumberAccount()+".");
             return newUser;
         }else
             return null;
@@ -55,7 +58,7 @@ public class UserService {
             return false;
         }
 
-        if(user.getAccount() == null || user.getAccount().getAccountType() == null
+        if(user.getAccount() == null || null == user.getAccount().getAccountType()
                 || user.getAccount().getAccountType().isEmpty() || user.getAccount().getLoanLimit() < 0){
             System.out.println("CONTA invalida");
             return false;
@@ -74,14 +77,17 @@ public class UserService {
     @Transactional(readOnly = true)
     public User validateLogin(String login, String password) {
         List<User> userList = userRepository.findAll();
-        for (User u:userList) {
-            if(u.getCpf().equals(login) && u.getPassword().equals(password)){
-                logTransactionsController.newLog(TransactionType.LOGIN, u.getId(),
-                        "Login realizado com sucesso pela conta: " + u.getAccount().getNumberAccount());
-                return u;
+        try {
+            for (User u : userList) {
+                if (u.getCpf().equals(login) && u.getPassword().equals(password)) {
+//                logTransactionsController.newLog(TransactionType.LOGIN, u.getId(),
+//                        "Login realizado com sucesso pela conta: " + u.getAccount().getNumberAccount());
+                    return u;
+                }
             }
+        }catch (Exception ex){
+            System.out.println("USUARIO nao encontrado");
         }
-        System.out.println("USUARIO nao encontrado");
         return null;
     }
 
@@ -112,60 +118,61 @@ public class UserService {
 //        return true;
 //    }
 
-    @Transactional
-    public boolean createTransfer(User sender, User receiver, Double value) {
-        if(validateTransfer(sender, receiver, value)){
-            makeTransfer(sender, receiver, value);
-            return true;
-        }
-        System.out.println("DESTINATARIO nao encontrado");
-        return false;
-    }
+//    @Transactional
+//    public boolean createTransfer(User sender, User receiver, Double value) {
+//        if(validateTransfer(sender, receiver, value)){
+//            makeTransfer(sender, receiver, value);
+//            return true;
+//        }
+//        System.out.println("DESTINATARIO nao encontrado");
+//        return false;
+//    }
 
-    private void makeTransfer(User sender, User receiver, Double value) {
-        receiver.getAccount().setBalance(receiver.getAccount().getBalance() + value);
-        userRepository.saveAndFlush(receiver);
-        sender.getAccount().setBalance(sender.getAccount().getBalance() - value);
-        userRepository.saveAndFlush(sender);
-        logTransactionsController.newLog(TransactionType.TRANSFER, sender.getId(), receiver.getId(),
-                "TRANSFERENCIA realizada por "+sender.getAccount().getNumberAccount()
-                        +" para "+receiver.getAccount().getNumberAccount());
-    }
+//    private void makeTransfer(User sender, User receiver, Double value) {
+//        receiver.getAccount().setBalance(receiver.getAccount().getBalance() + value);
+//        userRepository.saveAndFlush(receiver);
+//        sender.getAccount().setBalance(sender.getAccount().getBalance() - value);
+//        userRepository.saveAndFlush(sender);
+//        logTransactionsController.newLog(TransactionType.TRANSFER, sender.getId(), receiver.getId(),
+//                "TRANSFERENCIA realizada por "+sender.getAccount().getNumberAccount()
+//                        +" para "+receiver.getAccount().getNumberAccount());
+//    }
+//
+//    @Transactional(readOnly = true)
+//    private boolean validateTransfer(User user, User addressee, Double value) {
+//        /* check if value is valide*/
+//        if(null == value || value <= 0 || value.isNaN()) {
+//            System.out.println("VALOR para TRANSFERENCIA invalido");
+//            return false;
+//        }
+//
+//        /* check if the addressee exist*/
+//        if(null == checkUserExistence(addressee.getAccount().getNumberAccount())){
+//            System.out.println("DESTINATARIO para TRANSFERENCIA nao encontrado");
+//            return false;
+//        }
+//
+//        /* do the transfer if the client have money enough */
+//        if(user.getAccount().getBalance() >= value) {
+//            return true;
+//        }
+//        return false;
+//    }
+
+//
+//    public User checkUserExistence(int numberAccount) {
+//        /* ACREDITE... isso funciona
+//         * int c = 768_890;
+//         * System.out.println("Seu cetico: " + c);*/
+//        return userRepository.findByAccount(numberAccount);
+//    }
+
+//    TODO excluir esse metodo quando finalizar o projeto
+//    public List<User> getAllUsers() {
+//        return userRepository.findAll();
+//    }
 
     @Transactional(readOnly = true)
-    private boolean validateTransfer(User user, User addressee, Double value) {
-        /* check if value is valide*/
-        if(null == value || value <= 0 || value.isNaN()) {
-            System.out.println("VALOR para TRANSFERENCIA invalido");
-            return false;
-        }
-
-        /* check if the addressee exist*/
-        if(null == checkUserExistence(addressee.getAccount().getNumberAccount())){
-            System.out.println("DESTINATARIO para TRANSFERENCIA nao encontrado");
-            return false;
-        }
-
-        /* do the transfer if the client have money enough */
-        if(user.getAccount().getBalance() >= value) {
-            return true;
-        }
-        return false;
-    }
-
-    @Transactional(readOnly = true)
-    public User checkUserExistence(int numberAccount) {
-        /* ACREDITE... isso funciona
-         * int c = 768_890;
-         * System.out.println("Seu cetico: " + c);*/
-        return userRepository.findByAccount(numberAccount);
-    }
-
-    //TODO excluir esse metodo quando finalizar o projeto
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
     public User findByAccount(int numberAccount) {
         return userRepository.findByAccount(numberAccount);
     }

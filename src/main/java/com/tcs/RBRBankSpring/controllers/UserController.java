@@ -24,36 +24,36 @@ public class UserController {
         return userService.createClient(user);
     }
 
-    //TODO excluir esse metodo quando finalizar o projeto
-    @GetMapping("/cli/all")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
+//    //TODO excluir esse metodo quando finalizar o projeto
+//    @GetMapping("/cli/all")
+//    public List<User> getAllUsers() {
+//        return userService.getAllUsers();
+//    }
 
     @GetMapping("/cli")
     public ResponseEntity<User> getClient(@RequestParam Integer numberAccount) {
-        return ResponseEntity.ok(userService.checkUserExistence(numberAccount));
+        return ResponseEntity.ok(userService.findByAccount(numberAccount));
     }
 
     @PostMapping("/login")
     public User loginAccount(@RequestBody User login) {
         return userService.validateLogin(login.getCpf(), login.getPassword());
     }
-
-    @PostMapping("/transfer")
-    public ResponseEntity doTransfer(@RequestBody TransferRequest transferRequest) {
-        User sender = userService.findByAccount(transferRequest.getSenderId());
-        User receiver = userService.findByAccount(transferRequest.getReceiverId());
-
-        if (sender != null && receiver != null) {
-            if(userService.createTransfer(sender, receiver, transferRequest.getValue()))
-                return ResponseEntity.ok().build();
-            else
-                ResponseEntity.status(HttpStatus.CONFLICT);
-        }
-
-        return ResponseEntity.notFound().build();
-    }
+//
+//    @PostMapping("/transfer")
+//    public ResponseEntity doTransfer(@RequestBody TransferRequest transferRequest) {
+//        User sender = userService.findByAccount(transferRequest.getSenderId());
+//        User receiver = userService.findByAccount(transferRequest.getReceiverId());
+//
+//        if (sender != null && receiver != null) {
+//            if(userService.createTransfer(sender, receiver, transferRequest.getValue()))
+//                return ResponseEntity.ok().build();
+//            else
+//                ResponseEntity.status(HttpStatus.CONFLICT);
+//        }
+//
+//        return ResponseEntity.notFound().build();
+//    }
 //
 //    @PostMapping("/loan")
 //    public ResponseEntity doLoan(@RequestBody LoanRequest loanRequest) {
