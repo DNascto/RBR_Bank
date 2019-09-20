@@ -169,9 +169,9 @@ public class UserService {
 //    }
 
 //    TODO excluir esse metodo quando finalizar o projeto
-//    public List<User> getAllUsers() {
-//        return userRepository.findAll();
-//    }
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
     @Transactional(readOnly = true)
     public User findByAccount(int numberAccount) {
