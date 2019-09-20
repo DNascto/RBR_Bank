@@ -7,6 +7,7 @@ import com.tcs.RBRBankSpring.models.Investment;
 import com.tcs.RBRBankSpring.models.TransactionType;
 import com.tcs.RBRBankSpring.repositories.InvestmentRepository;
 import com.tcs.RBRBankSpring.request.InvestmentRequest;
+import com.tcs.RBRBankSpring.request.TransferRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,23 +16,27 @@ import java.time.LocalDate;
 
 @Service
 public class InvestmentService {
-    @Autowired
     private InvestmentRepository investmentRepository;
-    @Autowired
     private LogTransactionsController logTransactionsController;
-
-    @Autowired
     private AccountController accountController;
 
-    public boolean createInvestment(InvestmentRequest investment) {
-        Account account = validateInvestment(investment);
+    @Autowired
+    public InvestmentService(InvestmentRepository investmentRepository, LogTransactionsController logTransactionsController,
+                             AccountController accountController) {
+        this.investmentRepository = investmentRepository;
+        this.logTransactionsController = logTransactionsController;
+        this.accountController = accountController;
+    }
+
+    public boolean createInvestment(InvestmentRequest investmentRequest) {
+        Account account = validateInvestment(investmentRequest);
         if(null != account) {
             Investment invest = new Investment();
-            invest.setValue(investment.getValue());
+            invest.setValue(investmentRequest.getValue());
             invest.setUserAccount(account);
-            invest.setInvestmentType(investment.getInvestmentName());
+            invest.setInvestmentType(investmentRequest.getInvestmentName());
             LocalDate data = LocalDate.now();
-            switch (investment.getInvestmentName().toLowerCase()) {
+            switch (investmentRequest.getInvestmentName().toLowerCase()) {
                 case "cdi": invest.setExpiry(data.plusYears(1));
                         invest.setProfitabilityRate(6F);
                         break;
@@ -43,6 +48,12 @@ public class InvestmentService {
                         break;
                 default: return false;
             }
+            TransferRequest transferRequest = new TransferRequest();
+            transferRequest.setReceiverId(000001);
+            transferRequest.setSenderId(investmentRequest.getAccount().getNumberAccount());
+            transferRequest.setValue((double) investmentRequest.getValue());
+
+            accountController.doTransfer(transferRequest);
             investmentRepository.save(invest);
             logTransactionsController.newLog(TransactionType.INVESTMENT, account.getId(),
                     "Investimento "+invest.getInvestmentType()+" feito por "+account.getNumberAccount());
