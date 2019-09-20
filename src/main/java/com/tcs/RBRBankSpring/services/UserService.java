@@ -40,8 +40,9 @@ public class UserService {
     }
 
     private boolean validateUser(User user) {
-        if(user.getCpf() == null || user.getCpf().isEmpty() || /*user.getCpf().matches("[a-zA-Z\\s]*")*/
-            !user.getCpf().matches("[0-9]*") || user.getCpf().length() != 11){
+        if(user.getCpf() == null || user.getCpf().isEmpty() || user.getCpf().startsWith("0") ||
+                /*user.getCpf().matches("[a-zA-Z\\s]*")*/
+                !user.getCpf().matches("[0-9]*") || user.getCpf().length() != 11){
             System.out.println("CPF invalido");
             return false;
         }

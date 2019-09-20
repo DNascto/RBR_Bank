@@ -24,14 +24,16 @@ public class AccountService {
 
     public Account createAccount(Account acc) {
         Account account = new Account();
-        //TODO remover quando finalizar a regra de negocio
-        account.setAccountType(acc.getAccountType());
-        account.setBankBranch(174);
+        if(acc.getAccountType() != null)
+            account.setAccountType(acc.getAccountType() );
+        else
+           return null;
 
         account.setBalance(acc.getBalance() > 0 ? acc.getBalance() : 0d);
 
         account.setLoanLimit(acc.getLoanLimit() > 0 ? acc.getLoanLimit() : 5000d);
 
+        account.setBankBranch(174);
         account.setNumberAccount(generateAccountNumber());
         return accountRepository.save(account);
     }
@@ -74,6 +76,7 @@ public class AccountService {
 
         return true;
     }
+
     @Transactional
     public boolean createTransfer(Account sender, Account receiver, Double value) {
         if(validateTransfer(sender, receiver, value)){
