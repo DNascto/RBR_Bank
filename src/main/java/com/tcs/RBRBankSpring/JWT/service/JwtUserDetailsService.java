@@ -24,7 +24,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         com.tcs.RBRBankSpring.models.User user = userService.getLogin(username);
 
 
-
         if(user != null) {
             return new User(user.getCpf(), webSecurityConfig.passwordEncoder().encode(user.getPassword()), new ArrayList<>());
         }else{

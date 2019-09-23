@@ -38,7 +38,6 @@ public class UserController {
         return ResponseEntity.ok(userService.findByAccount(numberAccount));
     }
 
-    @PostMapping("/login")
     public User loginAccount(@RequestBody User login) {
         return userService.validateLogin(login.getCpf(), login.getPassword());
     }
