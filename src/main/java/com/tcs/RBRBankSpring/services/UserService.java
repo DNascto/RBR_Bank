@@ -91,83 +91,20 @@ public class UserService {
         }
         return null;
     }
-
-//    public boolean createLoan(Account account, Double value) {
-//        if(validateLoan(account, value)) {
-//            account.setLoanLimit(account.getLoanLimit() - value);
-//            User currentUser = userRepository.save(user);
-//            logTransactionsController.newLog(TransactionType.LOAN, currentUser.getId(), "Emprestimo feito pelo usuario (id) "
-//                    + currentUser.getId() + " com a conta \"" + currentUser.getAccount().getNumberAccount()+"\" no valor de ("+value+").");
-//            return true;
-//        }else
-//            return false;
-//    }
-//
-//    @Transactional(readOnly = true)
-//    private boolean validateLoan(Account account, Double value) {
-//        /* check if value is valide*/
-//        if(null == value || value <= 0 || value.isNaN()) {
-//            System.out.println("VALOR para EMPRESTIMO invalido");
-//            return false;
-//        }
-//
-//        if(account.getLoanLimit() < value) {
-//            System.out.println("VALOR ultrapassa o limite de EMPRESTIMO");
-//            return false;
-//        }
-//
-//        return true;
-//    }
-
-//    @Transactional
-//    public boolean createTransfer(User sender, User receiver, Double value) {
-//        if(validateTransfer(sender, receiver, value)){
-//            makeTransfer(sender, receiver, value);
-//            return true;
-//        }
-//        System.out.println("DESTINATARIO nao encontrado");
-//        return false;
-//    }
-
-//    private void makeTransfer(User sender, User receiver, Double value) {
-//        receiver.getAccount().setBalance(receiver.getAccount().getBalance() + value);
-//        userRepository.saveAndFlush(receiver);
-//        sender.getAccount().setBalance(sender.getAccount().getBalance() - value);
-//        userRepository.saveAndFlush(sender);
-//        logTransactionsController.newLog(TransactionType.TRANSFER, sender.getId(), receiver.getId(),
-//                "TRANSFERENCIA realizada por "+sender.getAccount().getNumberAccount()
-//                        +" para "+receiver.getAccount().getNumberAccount());
-//    }
-//
-//    @Transactional(readOnly = true)
-//    private boolean validateTransfer(User user, User addressee, Double value) {
-//        /* check if value is valide*/
-//        if(null == value || value <= 0 || value.isNaN()) {
-//            System.out.println("VALOR para TRANSFERENCIA invalido");
-//            return false;
-//        }
-//
-//        /* check if the addressee exist*/
-//        if(null == checkUserExistence(addressee.getAccount().getNumberAccount())){
-//            System.out.println("DESTINATARIO para TRANSFERENCIA nao encontrado");
-//            return false;
-//        }
-//
-//        /* do the transfer if the client have money enough */
-//        if(user.getAccount().getBalance() >= value) {
-//            return true;
-//        }
-//        return false;
-//    }
-
-//
-//    public User checkUserExistence(int numberAccount) {
-//        /* ACREDITE... isso funciona
-//         * int c = 768_890;
-//         * System.out.println("Seu cetico: " + c);*/
-//        return userRepository.findByAccount(numberAccount);
-//    }
-
+    @Transactional(readOnly = true)
+    public User getLogin(String login) {
+        List<User> userList = userRepository.findAll();
+        try {
+            for (User u : userList) {
+                if (u.getCpf().equals(login)) {
+                    return u;
+                }
+            }
+        }catch (Exception ex){
+            System.out.println("USUARIO nao encontrado");
+        }
+        return null;
+    }
 //    TODO excluir esse metodo quando finalizar o projeto
     public List<User> getAllUsers() {
         return userRepository.findAll();
