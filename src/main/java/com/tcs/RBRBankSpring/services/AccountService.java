@@ -24,10 +24,11 @@ public class AccountService {
 
     public Account createAccount(Account acc) {
         Account account = new Account();
-        if(acc.getAccountType() != null)
-            account.setAccountType(acc.getAccountType() );
-        else
+        if(acc.getAccountType() == null || acc.getAccountType().isEmpty() ||
+                acc.getAccountType().length() < 6 || acc.getAccountType().length() > 9)
            return null;
+        else
+            account.setAccountType(acc.getAccountType() );
 
         account.setBalance(acc.getBalance() > 0 ? acc.getBalance() : 0d);
 
@@ -41,9 +42,9 @@ public class AccountService {
     private int generateAccountNumber(){
         Instant date = Instant.now();
         String part1 = date.toString().substring(0, 10);
-        String vet2 = date.toString().substring(11,19);
+        String part2 = date.toString().substring(11,19);
         int day = Integer.parseInt(part1.replace("-", ""));
-        int hour = Integer.parseInt(vet2.replace(":", ""));
+        int hour = Integer.parseInt(part2.replace(":", ""));
 
         return day + hour;
     }
@@ -66,6 +67,11 @@ public class AccountService {
         /* check if value is valide*/
         if(null == value || value <= 0 || value.isNaN()) {
             System.out.println("VALOR para EMPRESTIMO invalido");
+            return false;
+        }
+
+        if(account == null) {
+            System.out.println("Conta INVALIDA");
             return false;
         }
 
@@ -106,7 +112,7 @@ public class AccountService {
         }
 
         /* check if the addressee exist*/
-        if(null == findByAccount(addressee.getNumberAccount())){
+        if(addressee == null){
             System.out.println("DESTINATARIO para TRANSFERENCIA nao encontrado");
             return false;
         }
