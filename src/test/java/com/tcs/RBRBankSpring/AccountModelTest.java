@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AccountTest {
+public class AccountModelTest {
     @Mock
     private AccountRepository accountRepository;
 
