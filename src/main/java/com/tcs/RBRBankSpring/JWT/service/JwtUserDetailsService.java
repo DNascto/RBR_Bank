@@ -23,7 +23,6 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.tcs.RBRBankSpring.models.User user = userService.getLogin(username);
 
-
         if(user != null) {
             return new User(user.getCpf(), webSecurityConfig.passwordEncoder().encode(user.getPassword()), new ArrayList<>());
         }else{

@@ -27,11 +27,10 @@ public class UserController {
         return userService.createClient(user);
     }
 
-    //TODO excluir esse metodo quando finalizar o projeto
-    @GetMapping("/cli/all")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
+//    @GetMapping("/cli/all")
+//    public List<User> getAllUsers() {
+//        return userService.getAllUsers();
+//    }
 
     @GetMapping("/cli")
     public ResponseEntity<User> getClient(@RequestParam Integer numberAccount) {
@@ -41,36 +40,13 @@ public class UserController {
     public User loginAccount(@RequestBody User login) {
         return userService.validateLogin(login.getCpf(), login.getPassword());
     }
-//
-//    @PostMapping("/transfer")
-//    public ResponseEntity doTransfer(@RequestBody TransferRequest transferRequest) {
-//        User sender = userService.findByAccount(transferRequest.getSenderId());
-//        User receiver = userService.findByAccount(transferRequest.getReceiverId());
-//
-//        if (sender != null && receiver != null) {
-//            if(userService.createTransfer(sender, receiver, transferRequest.getValue()))
-//                return ResponseEntity.ok().build();
-//            else
-//                ResponseEntity.status(HttpStatus.CONFLICT);
-//        }
-//
-//        return ResponseEntity.notFound().build();
-//    }
-//
-//    @PostMapping("/loan")
-//    public ResponseEntity doLoan(@RequestBody LoanRequest loanRequest) {
-//        User user = userService.findByAccount(loanRequest.getAccountNumber());
-//
-//        if (user != null) {
-//            if(userService.createLoan(user.getAccount(), loanRequest.getValue()))
-//                ResponseEntity.ok().build();
-//            else
-//                ResponseEntity.status(HttpStatus.CONFLICT);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
 
     public User findByAccount(int numberAccount) {
         return userService.findByAccount(numberAccount);
+    }
+
+    @GetMapping("/cpf")
+    public boolean validateCpf(@RequestParam String cpf) {
+        return userService.validateCpf(cpf);
     }
 }

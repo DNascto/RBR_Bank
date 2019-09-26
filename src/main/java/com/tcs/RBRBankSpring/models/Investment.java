@@ -9,10 +9,6 @@ public class Investment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String investmentType;
-
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name="user", referencedColumnName="id")
-//    private User user;
     @ManyToOne(fetch = FetchType.EAGER)
     private Account userAccount;
     private double value;

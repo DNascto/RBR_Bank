@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -32,8 +33,8 @@ public class UserService {
             Account account = accountController.createAccount(user.getAccount());
             user.setAccount(account);
             User newUser = userRepository.save(user);
-//            logTransactionsController.newLog(TransactionType.NEWACCOUNT, newUser.getId(),
-//                    "Criação do usuario com a conta: " + newUser.getAccount().getNumberAccount()+".");
+            logTransactionsController.newLog(TransactionType.NEWACCOUNT, newUser.getId(),
+                    "Criação do usuario com a conta: " + newUser.getAccount().getNumberAccount()+".");
             return newUser;
         }else
             return null;
@@ -46,6 +47,8 @@ public class UserService {
             System.out.println("CPF invalido");
             return false;
         }
+        if(!validateCpf(user.getCpf()))
+            return false;
 
         if(user.getPassword() == null || user.getPassword().isEmpty() || user.getPassword().equals(user.getCpf())
                 || user.getPassword().length() < 6 || user.getPassword().length() > 20){
@@ -54,7 +57,7 @@ public class UserService {
         }
 
         if(user.getBirthDate() == null || user.getBirthDate().toString().isEmpty()
-                || user.getBirthDate().toString().matches("[a-zA-Z ]*")){
+                || user.getBirthDate().toString().matches("[a-zA-Z ]*") || user.getBirthDate().compareTo(new Date()) >= 0){
             System.out.println("DATA DE NASCIMENTO invalida");
             return false;
         }
@@ -73,6 +76,37 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    public boolean validateCpf(String cpf) {
+        String[] str = cpf.split("");
+
+        if(cpf.matches("[0]{11}|[1]{11}|[2]{11}|[3]{11}|[4]{11}|[5]{11}|[6]{11}|[7]{11}|[8]{11}|[9]{11}")) {
+            return false;
+        }
+
+        int[] nums = new int[11];
+
+        for (int a = 0; a < str.length; a++) {
+            nums[a] = Integer.parseInt(str[a]);
+        }
+
+        if(somatorio(nums, 10) != nums[9])
+            return false;
+
+        if(somatorio(nums, 11) != nums[10])
+            return false;
+
+        return true;
+    }
+
+    private int somatorio(int str[], int init){
+        int soma = 0;
+        for (int i = init, j=0; i > 1; i--, j++){
+            soma += str[j] * i;
+        }
+        int res = (soma * 10) % 11;
+        return res == 10 ? 0 : res ;
     }
 
     @Transactional(readOnly = true)

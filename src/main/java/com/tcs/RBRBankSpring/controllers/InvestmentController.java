@@ -1,7 +1,5 @@
 package com.tcs.RBRBankSpring.controllers;
 
-import com.tcs.RBRBankSpring.models.Investment;
-import com.tcs.RBRBankSpring.repositories.InvestmentRepository;
 import com.tcs.RBRBankSpring.request.InvestmentRequest;
 import com.tcs.RBRBankSpring.services.InvestmentService;
 import org.springframework.beans.factory.annotation.Autowired;
