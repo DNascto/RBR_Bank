@@ -1,9 +1,9 @@
 package com.tcs.RBRBankSpring;
 
-import com.tcs.RBRBankSpring.controllers.LogTransactionsController;
 import com.tcs.RBRBankSpring.models.Account;
 import com.tcs.RBRBankSpring.repositories.AccountRepository;
 import com.tcs.RBRBankSpring.services.AccountService;
+import com.tcs.RBRBankSpring.services.LogTransactionsService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,8 @@ public class AccountModelTest {
     private AccountRepository accountRepository;
 
     @Mock
-    private LogTransactionsController logTransactionsController;
+    private LogTransactionsService logTransactionsService;
+//    private LogTransactionsController logTransactionsController;
 
     @InjectMocks
     private AccountService accountService;

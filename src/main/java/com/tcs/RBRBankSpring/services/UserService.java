@@ -1,7 +1,6 @@
 package com.tcs.RBRBankSpring.services;
 
 import com.tcs.RBRBankSpring.controllers.AccountController;
-import com.tcs.RBRBankSpring.controllers.LogTransactionsController;
 import com.tcs.RBRBankSpring.models.Account;
 import com.tcs.RBRBankSpring.models.TransactionType;
 import com.tcs.RBRBankSpring.models.User;
@@ -18,22 +17,29 @@ import java.util.List;
 public class UserService {
 
     private UserRepository userRepository;
-    private AccountController accountController;
-    private LogTransactionsController logTransactionsController;
+    private AccountService accountService;
+//    private AccountController accountController;
+//    private LogTransactionsController logTransactionsController;
+    private LogTransactionsService logTransactionsService;
 
     @Autowired
-    public UserService(UserRepository userRepository, AccountController accountController, LogTransactionsController logTransactionsController) {
+//    public UserService(UserRepository userRepository, AccountController accountController, LogTransactionsController logTransactionsController) {
+    public UserService(UserRepository userRepository, AccountService accountService, LogTransactionsService logTransactionsService) {
         this.userRepository = userRepository;
-        this.accountController = accountController;
-        this.logTransactionsController = logTransactionsController;
+        this.accountService = accountService;
+//        this.accountController = accountController;
+//        this.logTransactionsController = logTransactionsController;
+        this.logTransactionsService = logTransactionsService;
     }
 
     public User createClient(User user){
         if(validateUser(user)) {
-            Account account = accountController.createAccount(user.getAccount());
+            Account account = accountService.createAccount(user.getAccount());
             user.setAccount(account);
             User newUser = userRepository.save(user);
-            logTransactionsController.newLog(TransactionType.NEWACCOUNT, newUser.getId(),
+//            logTransactionsController.newLog(TransactionType.NEWACCOUNT, newUser.getId(),
+//                    "Criação do usuario com a conta: " + newUser.getAccount().getNumberAccount()+".");
+            logTransactionsService.newLog(TransactionType.NEWACCOUNT, newUser.getId(),
                     "Criação do usuario com a conta: " + newUser.getAccount().getNumberAccount()+".");
             return newUser;
         }else
@@ -117,6 +123,8 @@ public class UserService {
                 if (u.getCpf().equals(login) && u.getPassword().equals(password)) {
 //                logTransactionsController.newLog(TransactionType.LOGIN, u.getId(),
 //                        "Login realizado com sucesso pela conta: " + u.getAccount().getNumberAccount());
+                logTransactionsService.newLog(TransactionType.LOGIN, u.getId(),
+                        "Login realizado com sucesso pela conta: " + u.getAccount().getNumberAccount());
                     return u;
                 }
             }
@@ -139,10 +147,10 @@ public class UserService {
         }
         return null;
     }
-//    TODO excluir esse metodo quando finalizar o projeto
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+
+//    public List<User> getAllUsers() {
+//        return userRepository.findAll();
+//    }
 
     @Transactional(readOnly = true)
     public User findByAccount(int numberAccount) {

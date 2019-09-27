@@ -1,6 +1,5 @@
 package com.tcs.RBRBankSpring.services;
 
-import com.tcs.RBRBankSpring.controllers.LogTransactionsController;
 import com.tcs.RBRBankSpring.models.Account;
 import com.tcs.RBRBankSpring.models.TransactionType;
 import com.tcs.RBRBankSpring.repositories.AccountRepository;
@@ -14,12 +13,15 @@ import java.time.Instant;
 public class AccountService {
 
     private AccountRepository accountRepository;
-    private LogTransactionsController logTransactionsController;
+//    private LogTransactionsController logTransactionsController;
+    private LogTransactionsService logTransactionsService;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, LogTransactionsController logTransactionsController) {
+//    public AccountService(AccountRepository accountRepository, LogTransactionsController logTransactionsController) {
+    public AccountService(AccountRepository accountRepository, LogTransactionsService logTransactionsService) {
         this.accountRepository = accountRepository;
-        this.logTransactionsController = logTransactionsController;
+//        this.logTransactionsController = logTransactionsController;
+        this.logTransactionsService = logTransactionsService;
     }
 
     public Account createAccount(Account acc) {
@@ -54,7 +56,8 @@ public class AccountService {
             account.setLoanLimit(account.getLoanLimit() - value);
             account.setBalance(account.getBalance() + value);
             Account currentAccount = accountRepository.save(account);
-            logTransactionsController.newLog(TransactionType.LOAN, currentAccount.getId(),
+//            logTransactionsController.newLog(TransactionType.LOAN, currentAccount.getId(),
+            logTransactionsService.newLog(TransactionType.LOAN, currentAccount.getId(),
                     "Emprestimo feito pelo usuario (id) " + currentAccount.getId() +
                             " com a conta \"" + currentAccount.getNumberAccount() + "\" no valor de (" + value + ").");
             return true;
@@ -98,7 +101,8 @@ public class AccountService {
         accountRepository.saveAndFlush(receiver);
         sender.setBalance(sender.getBalance() - value);
         accountRepository.saveAndFlush(sender);
-        logTransactionsController.newLog(TransactionType.TRANSFER, sender.getId(), receiver.getId(),
+//        logTransactionsController.newLog(TransactionType.TRANSFER, sender.getId(), receiver.getId(),
+        logTransactionsService.newLog(TransactionType.TRANSFER, sender.getId(), receiver.getId(),
                 "TRANSFERENCIA realizada por "+sender.getNumberAccount()
                         +" para "+receiver.getNumberAccount());
     }
