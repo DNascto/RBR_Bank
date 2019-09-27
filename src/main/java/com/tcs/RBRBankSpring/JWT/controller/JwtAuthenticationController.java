@@ -1,5 +1,4 @@
 package com.tcs.RBRBankSpring.JWT.controller;
-import java.util.Objects;
 
 import com.tcs.RBRBankSpring.models.User;
 import com.tcs.RBRBankSpring.response.ResponseUserWithToken;
@@ -19,11 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tcs.RBRBankSpring.JWT.service.JwtUserDetailsService;
 import com.tcs.RBRBankSpring.JWT.config.JwtTokenUtil;
-import com.tcs.RBRBankSpring.JWT.model.JwtRequest;
-import com.tcs.RBRBankSpring.JWT.model.JwtResponse;
-
-import javax.servlet.annotation.HttpConstraint;
-import javax.servlet.http.HttpSession;
 
 @RestController
 @CrossOrigin
